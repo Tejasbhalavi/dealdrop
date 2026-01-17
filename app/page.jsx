@@ -1,8 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { LogIn } from "lucide-react";
+
 import Image from "next/image";
 import { Rabbit, Shield, Bell } from "lucide-react";
 import AddProductFrom from "@/components/AddProductFrom";
+import AuthButton from "@/components/AuthButton";
+
 
 export default function Home() {
   const user = null; // Replace with actual user authentication logic
@@ -43,14 +44,7 @@ export default function Home() {
           </div>
 
           {/* Auth Button  */}
-          <Button
-            variant="default"
-            size="lg"
-            className="bg-orange-500 hover:bg-orange-600 gap-2 "
-          >
-            <LogIn className="w-4 h-4" />
-            Sign In
-          </Button>
+          <AuthButton user={user} />
         </div>
       </header>
 
