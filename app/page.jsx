@@ -3,10 +3,15 @@ import Image from "next/image";
 import { Rabbit, Shield, Bell } from "lucide-react";
 import AddProductFrom from "@/components/AddProductFrom";
 import AuthButton from "@/components/AuthButton";
+import { createClient } from "@/utils/supabase/server";
 
 
-export default function Home() {
-  const user = null; // Replace with actual user authentication logic
+export default async function Home() {
+  const supabase = await createClient();
+  
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const products = []; // Replace with actual product data
 
   const FEATURES = [
