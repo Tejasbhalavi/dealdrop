@@ -101,22 +101,66 @@ export async function addProduct(formData) {
 }
 
 /* ---------------- DELETE PRODUCT ---------------- */
+// export async function deleteProduct(productId) {
+//   try {
+//     const supabase = await createClient();
+//     const { error } = await supabase
+//       .from("products")
+//       .delete()
+//       .eq("id", productId);
+
+//     if (error) throw error;
+
+//     revalidatePath("/");
+//     return { success: true };
+//   } catch (error) {
+//     return { error: error.message };
+//   }
+// }
+
+
+
 export async function deleteProduct(productId) {
   try {
+    if (!productId) {
+      return { error: "Product ID is required" };
+    }
+
     const supabase = await createClient();
+
+    // ✅ Auth check
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return { error: "Unauthorized" };
+    }
+
+    // ✅ Delete only user's product
     const { error } = await supabase
       .from("products")
       .delete()
-      .eq("id", productId);
+      .eq("id", productId)
+      .eq("user_id", user.id);
 
     if (error) throw error;
 
+    // ✅ Revalidate product list page
     revalidatePath("/");
-    return { success: true };
+
+    return {
+      success: true,
+      message: "Product removed successfully",
+    };
   } catch (error) {
-    return { error: error.message };
+    return {
+      error: error.message || "Failed to delete product",
+    };
   }
 }
+
 
 /* ---------------- GET PRODUCTS ---------------- */
 export async function getProducts() {
