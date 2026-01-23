@@ -1,35 +1,44 @@
 Deal Drop
-Deal Drop is a real-time price tracking application built with Next.js. It allows users to monitor prices from any e-commerce site and receive instant alerts when a price drop is detected.
+Deal Drop is a real-time price tracking application built with Next.js 16. It allows users to monitor prices from any e-commerce site and receive instant alerts when a price drop is detected.
 
-Features
-Lightning Fast Extraction: The app extracts product prices in seconds, effectively handling JavaScript and dynamic content.
+✨ Features
+Lightning Fast Extraction: Extracts prices in seconds, handling JavaScript and dynamic content.
 
-Reliable Scraping: It works across major e-commerce platforms using built-in anti-bot protection.
+Always Reliable: Works across all major e-commerce sites with built-in anti-bot protection.
 
-Smart Alerts: Users are notified immediately when a product's price falls below their specified target.
+Smart Alerts: Get notified instantly when prices drop below your target.
 
-Price History: Tracks price changes over time, allowing users to view historical data for their tracked items.
+Price History: Tracks price changes over time with interactive visualizations.
 
-AI-Powered: Utilizes AI and real-time web scraping for accurate data retrieval.
+AI-Powered: Uses real-time web scraping and AI to ensure accurate data extraction.
 
-Tech Stack
-Framework: Next.js 16
+🛠️ Tech Stack
+Core Framework & Styling
+Next.js 16: React framework for server-side rendering and server actions.
 
-Authentication & Database: Supabase
+React 19: For building the user interface.
 
-Web Scraping: Firecrawl
+Tailwind CSS: Utility-first CSS framework for styling.
 
-Styling: Tailwind CSS
+Backend & Data
+Supabase: Handles PostgreSQL database, user authentication (SSR), and real-time updates.
 
-Email Notifications: Resend
+Firecrawl: Specialized API used for structured web scraping.
 
-UI Components: Radix UI, Lucide React, and Sonner
+UI Components & Icons
+Radix UI: Primitive components used for accessible dialogs and slots.
 
-Charts: Recharts for price history visualization
+Lucide React: A library of consistent and clean icons.
 
-Getting Started
-Development Server
-To start the development server, use one of the following commands:
+Sonner: Toast component for providing user feedback.
+
+Data Visualization & Communication
+Recharts: Composable charting library used for price history graphs.
+
+Resend: Email API for sending price drop notifications.
+
+🚀 Getting Started
+First, run the development server:
 
 Bash
 
@@ -40,21 +49,11 @@ yarn dev
 pnpm dev
 # or
 bun dev
-The application will be accessible at http://localhost:3000.
+Open http://localhost:3000 with your browser to see the result.
 
-Environment Configuration
-The project requires integration with several services. Ensure you have the following set up:
+You can start editing the page by modifying app/page.jsx. The page auto-updates as you edit the file.
 
-Supabase: For database management and user authentication.
+📦 Deployment
+The easiest way to deploy your Next.js app is to use the Vercel Platform.
 
-Firecrawl: For extracting product data from URLs.
-
-Resend: For handling email alerts.
-
-Usage
-Authentication: Users must sign in to track products.
-
-Tracking Products: Paste a product URL into the AddProductForm to begin tracking.
-
-Managing Products: View all tracked items on the home page dashboard, where you can see current prices and delete items you no longer wish to follow
-
+Check out the Next.js deployment documentation for more details.
