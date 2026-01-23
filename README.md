@@ -1,10 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Deal Drop
+Deal Drop is a real-time price tracking application built with Next.js. It allows users to monitor prices from any e-commerce site and receive instant alerts when a price drop is detected.
 
-## Getting Started
+Features
+Lightning Fast Extraction: The app extracts product prices in seconds, effectively handling JavaScript and dynamic content.
 
-First, run the development server:
+Reliable Scraping: It works across major e-commerce platforms using built-in anti-bot protection.
 
-```bash
+Smart Alerts: Users are notified immediately when a product's price falls below their specified target.
+
+Price History: Tracks price changes over time, allowing users to view historical data for their tracked items.
+
+AI-Powered: Utilizes AI and real-time web scraping for accurate data retrieval.
+
+Tech Stack
+Framework: Next.js 16
+
+Authentication & Database: Supabase
+
+Web Scraping: Firecrawl
+
+Styling: Tailwind CSS
+
+Email Notifications: Resend
+
+UI Components: Radix UI, Lucide React, and Sonner
+
+Charts: Recharts for price history visualization
+
+Getting Started
+Development Server
+To start the development server, use one of the following commands:
+
+Bash
+
 npm run dev
 # or
 yarn dev
@@ -12,25 +40,21 @@ yarn dev
 pnpm dev
 # or
 bun dev
-```
+The application will be accessible at http://localhost:3000.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Environment Configuration
+The project requires integration with several services. Ensure you have the following set up:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Supabase: For database management and user authentication.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Firecrawl: For extracting product data from URLs.
 
-## Learn More
+Resend: For handling email alerts.
 
-To learn more about Next.js, take a look at the following resources:
+Usage
+Authentication: Users must sign in to track products.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Tracking Products: Paste a product URL into the AddProductForm to begin tracking.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Managing Products: View all tracked items on the home page dashboard, where you can see current prices and delete items you no longer wish to follow
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
