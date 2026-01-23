@@ -5,7 +5,6 @@ import { scrapeProduct } from "@/lib/firecrawl";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-/* ---------------- ADD PRODUCT ---------------- */
 export async function addProduct(formData) {
   const url = formData.get("url");
 
@@ -23,34 +22,28 @@ export async function addProduct(formData) {
       return { error: "Not authenticated" };
     }
 
-    // 🔥 Scrape product
+    // Scrape product data with Firecrawl
     const productData = await scrapeProduct(url);
 
-    console.log("FINAL PRODUCT DATA:", productData);
-
-    if (
-      !productData?.productName ||
-      typeof productData.currentPrice !== "number"
-    ) {
-      return {
-        error: "Could not extract product information from this URL",
-      };
+    if (!productData.productName || !productData.currentPrice) {
+      console.log(productData, "productData");
+      return { error: "Could not extract product information from this URL" };
     }
 
-    const newPrice = productData.currentPrice;
+    const newPrice = parseFloat(productData.currentPrice);
     const currency = productData.currencyCode || "USD";
 
-    // 🔎 Check if product exists (SAFE)
+    // Check if product exists to determine if it's an update
     const { data: existingProduct } = await supabase
       .from("products")
       .select("id, current_price")
       .eq("user_id", user.id)
       .eq("url", url)
-      .maybeSingle();
+      .single();
 
     const isUpdate = !!existingProduct;
 
-    // ⬆️ Upsert product
+    // Upsert product (insert or update based on user_id + url)
     const { data: product, error } = await supabase
       .from("products")
       .upsert(
@@ -59,13 +52,13 @@ export async function addProduct(formData) {
           url,
           name: productData.productName,
           current_price: newPrice,
-          currency,
-          image_url:
-            productData.productImageUrl || null,
+          currency: currency,
+          image_url: productData.productImageUrl,
           updated_at: new Date().toISOString(),
         },
         {
-          onConflict: "user_id,url",
+          onConflict: "user_id,url", // Unique constraint on user_id + url
+          ignoreDuplicates: false, // Always update if exists
         }
       )
       .select()
@@ -73,7 +66,7 @@ export async function addProduct(formData) {
 
     if (error) throw error;
 
-    // 📈 Price history (only if changed)
+    // Add to price history if it's a new product OR price changed
     const shouldAddHistory =
       !isUpdate || existingProduct.current_price !== newPrice;
 
@@ -81,12 +74,11 @@ export async function addProduct(formData) {
       await supabase.from("price_history").insert({
         product_id: product.id,
         price: newPrice,
-        currency,
+        currency: currency,
       });
     }
 
     revalidatePath("/");
-
     return {
       success: true,
       product,
@@ -100,69 +92,23 @@ export async function addProduct(formData) {
   }
 }
 
-/* ---------------- DELETE PRODUCT ---------------- */
-// export async function deleteProduct(productId) {
-//   try {
-//     const supabase = await createClient();
-//     const { error } = await supabase
-//       .from("products")
-//       .delete()
-//       .eq("id", productId);
-
-//     if (error) throw error;
-
-//     revalidatePath("/");
-//     return { success: true };
-//   } catch (error) {
-//     return { error: error.message };
-//   }
-// }
-
-
-
 export async function deleteProduct(productId) {
   try {
-    if (!productId) {
-      return { error: "Product ID is required" };
-    }
-
     const supabase = await createClient();
-
-    // ✅ Auth check
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return { error: "Unauthorized" };
-    }
-
-    // ✅ Delete only user's product
     const { error } = await supabase
       .from("products")
       .delete()
-      .eq("id", productId)
-      .eq("user_id", user.id);
+      .eq("id", productId);
 
     if (error) throw error;
 
-    // ✅ Revalidate product list page
     revalidatePath("/");
-
-    return {
-      success: true,
-      message: "Product removed successfully",
-    };
+    return { success: true };
   } catch (error) {
-    return {
-      error: error.message || "Failed to delete product",
-    };
+    return { error: error.message };
   }
 }
 
-
-/* ---------------- GET PRODUCTS ---------------- */
 export async function getProducts() {
   try {
     const supabase = await createClient();
@@ -179,7 +125,6 @@ export async function getProducts() {
   }
 }
 
-/* ---------------- PRICE HISTORY ---------------- */
 export async function getPriceHistory(productId) {
   try {
     const supabase = await createClient();
@@ -197,7 +142,6 @@ export async function getPriceHistory(productId) {
   }
 }
 
-/* ---------------- SIGN OUT ---------------- */
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
